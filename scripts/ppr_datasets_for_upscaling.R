@@ -557,3 +557,50 @@ if(FALSE){
   # load SOC object
   cc.soc <- readRDS('data/soc_extracted_full.rds')
 }
+
+# prepare database met FAOstat data
+if(FALSE){
+  
+  # read in the csv file (source: FAOSTAT, http://www.fao.org/faostat/en/#data/QC/visualize)
+  cr1 <- fread('data/Production_Crops_E_All_Data.csv')
+  
+  # select the data columns to be used
+  cr.cols <- c('Area Code','Area','Item Code','Item','Element','Unit','Y2018')
+  
+  # subset, filter and rename the FAO db
+  cr2 <- cr1[,mget(cr.cols)][Element %in% c('Area harvested','Production')]
+  setnames(cr2,c('Item Code','Item','Area','Area Code'),c('crop_code','crop_name','country','country_code'))
+  
+  # save file
+  fwrite(cr2,'data/production_Crops_E_All_Data_2018.csv')
+  
+} else {
+  
+  # save the faostat data
+  cr2 <- fread('data/production_Crops_E_All_Data_2018.csv')
+}
+
+
+# read and summarize FAO data crop residues per crop per country (kg N per crop per year)
+if(FALSE){
+  
+  # select the data columns to be used for year 2017
+  cr.cols <- c('Area Code','Area','Item Code','Item','Element','Unit','Y2017')
+  
+  # read in the csv file (source: http://www.fao.org/faostat/en/#data/GA/visualize)
+  cr1 <- fread('D:/ROSG/0000.N.09 Samenwerking WDV/data/fao/Emissions_Agriculture_Crop_Residues_E_All_Data_NOFLAG.csv')
+  
+  # subset, filter and rename the FAO db
+  cr1 <- cr1[,mget(cr.cols)][Element=='Residues (Crop residues)' & Area != 'World' & Item != 'All Crops']
+  setnames(cr1,c('Item Code','Item','Area','Area Code','Y2017'),c('crop_code','crop_name','country','country_code','fao_cr_resN'),skip_absent=TRUE)
+  
+  # save file
+  fwrite(cr1,'data/emissions_agriculture_crop_residues_e_all_data_NOFLAG_2017.csv')
+  
+} else {
+  
+ 
+  # save the faostat data
+  cr1 <- fread('data/emissions_agriculture_crop_residues_e_all_data_NOFLAG_2017.csv')
+}
+
