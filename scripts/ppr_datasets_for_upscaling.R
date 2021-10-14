@@ -599,8 +599,28 @@ if(FALSE){
   
 } else {
   
- 
   # save the faostat data
   cr1 <- fread('data/emissions_agriculture_crop_residues_e_all_data_NOFLAG_2017.csv')
 }
 
+# read and summarize FAO data crop residues burned per crop per country (kg DM per crop per year)
+if(FALSE){
+  
+  # select the data columns to be used for year 2017
+  cr.cols <- c('Area Code','Area','Item Code','Item','Element','Unit','Y2017')
+  
+  # read in the csv file (source:http://www.fao.org/faostat/en/#data/GB/visualize)
+  cr1 <- fread('D:/ROSG/0000.N.09 Samenwerking WDV/data/fao/Emissions_Agriculture_Burning_crop_residues_E_All_Data_NOFLAG.csv')
+  
+  # subset, filter and rename the FAO db
+  cr1 <- cr1[,mget(cr.cols)][Element=='Biomass burned (dry matter)']
+  setnames(cr1,c('Item Code','Item','Area','Area Code','Y2017'),c('crop_code','crop_name','country','country_code','fao_cr_burnedDM'))
+  
+  # save file
+  fwrite(cr1,'data/emissions_agriculture_burning_crop_residues_e_all_data_NOFLAG_2017.csv')
+  
+} else {
+  
+  # load the earlier saved faostat data
+  cr1 <- fread('data/emissions_agriculture_burning_crop_residues_e_all_data_NOFLAG_2017.csv')
+}
